@@ -14,8 +14,10 @@ import { Entypo } from '@expo/vector-icons';
 import useDimensions from '../hooks/useDimensions';
 import { FontAwesome } from '@expo/vector-icons';
 import GradientBackground from '../components/GradientBackground';
-import MediaCarousel from '../components/MediaCarousel';
-
+import MediaDisplay from '../components/MediaDisplay';
+import person from '../assets/person.jpg';
+import ahsoka from '../assets/ahsoka.png';
+import lotr from '../assets/lotr.jpg';
 export default function HomeScreen() {
     const { screenWidth } = useDimensions();
     const [categories, setCategories] = useState([
@@ -24,12 +26,29 @@ export default function HomeScreen() {
         'series',
         'test',
         'jabuka',
-        'xdxxxxxxxxx',
+        'aaaaaaaaa',
     ]);
-    const [focusedIndex, setFocusedIndex] = useState(null); // Initialize focusedIndex state
+    const allData = [
+        { id: 1, title: 'Person', imageUri: person, category: 'movies' },
+        { id: 2, title: 'Ahsoka', imageUri: ahsoka, category: 'series' },
+        { id: 3, title: 'Lord of the rings', imageUri: lotr, category: 'movies' },
+    ];
+    const [focusedIndex, setFocusedIndex] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [filteredData, setFilteredData] = useState([]);
 
     const setCategoryFocused = (index) => {
         setFocusedIndex(index);
+    };
+
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category);
+        if (category === 'all') {
+            setFilteredData(allData);
+        } else {
+            const filteredItems = allData.filter((item) => item.category === category);
+            setFilteredData(filteredItems);
+        }
     };
 
     return (
@@ -67,6 +86,7 @@ export default function HomeScreen() {
                     <FontAwesome name='search' size={25} color='white' />
                 </GradientBackground>
             </View>
+
             <View>
                 <ScrollView
                     horizontal
@@ -84,7 +104,12 @@ export default function HomeScreen() {
                                 linearGradientStyle={styles.categoryBackground}
                                 focused={focusedIndex === index}
                             >
-                                <TouchableOpacity onPress={() => setCategoryFocused(index)}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        handleCategoryChange(category);
+                                        setCategoryFocused(index);
+                                    }}
+                                >
                                     <Text style={styles.categoryText}>{category}</Text>
                                 </TouchableOpacity>
                             </GradientBackground>
@@ -92,7 +117,11 @@ export default function HomeScreen() {
                     ))}
                 </ScrollView>
             </View>
-            <MediaCarousel useCarousel />
+            <ScrollView>
+                <MediaDisplay useCarousel data={filteredData} title='Trending' />
+                <MediaDisplay data={filteredData} title='Popular' />
+                <MediaDisplay data={filteredData} title='Upcoming' />
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -110,11 +139,11 @@ const styles = StyleSheet.create({
     headerContainer: {
         justifyContent: 'space-between',
         flexDirection: 'row',
-        alignItems: 'center', // Align items vertically in the center
-        padding: 16, // Add padding to the left and right
+        alignItems: 'center',
+        padding: 16,
     },
     profilePicture: {
-        borderRadius: 100, // Make it circular
+        borderRadius: 100,
         borderWidth: 2,
         borderColor: colors.lightGray,
     },
@@ -142,9 +171,9 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     category: {
-        paddingVertical: 10, // Adjust the vertical padding as needed
+        paddingVertical: 10,
         marginRight: 20,
-        alignItems: 'center', // Center content horizontally
+        alignItems: 'center',
     },
     categoryBackground: {
         borderRadius: 15,
