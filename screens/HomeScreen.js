@@ -7,32 +7,20 @@ import {
     TextInput,
     Image,
     TouchableOpacity,
+    StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../theme';
 import { Entypo } from '@expo/vector-icons';
-import useDimensions from '../hooks/useDimensions';
 import { FontAwesome } from '@expo/vector-icons';
+
+import useDimensions from '../hooks/useDimensions';
 import GradientBackground from '../components/GradientBackground';
 import MediaDisplay from '../components/MediaDisplay';
-import person from '../assets/person.jpg';
-import ahsoka from '../assets/ahsoka.png';
-import lotr from '../assets/lotr.jpg';
+
+import { categories, allData } from '../data/data';
 export default function HomeScreen() {
-    const { screenWidth } = useDimensions();
-    const [categories, setCategories] = useState([
-        'all',
-        'movies',
-        'series',
-        'test',
-        'jabuka',
-        'aaaaaaaaa',
-    ]);
-    const allData = [
-        { id: 1, title: 'Person', imageUri: person, category: 'movies' },
-        { id: 2, title: 'Ahsoka', imageUri: ahsoka, category: 'series' },
-        { id: 3, title: 'Lord of the rings', imageUri: lotr, category: 'movies' },
-    ];
+    const { width, height } = useDimensions();
     const [focusedIndex, setFocusedIndex] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [filteredData, setFilteredData] = useState([]);
@@ -53,6 +41,7 @@ export default function HomeScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
+            <StatusBar style='light' />
             <View style={styles.headerContainer}>
                 <View style={styles.menuContainer}>
                     <Entypo name='menu' size={20} color='white' />
@@ -64,8 +53,8 @@ export default function HomeScreen() {
                         style={[
                             styles.profilePicture,
                             {
-                                width: screenWidth * 0.15,
-                                height: screenWidth * 0.15,
+                                width: width * 0.15,
+                                height: height * 0.09,
                             },
                         ]}
                     />
@@ -94,7 +83,7 @@ export default function HomeScreen() {
                     contentContainerStyle={{
                         paddingHorizontal: 16,
                         marginTop: 20,
-                        height: screenWidth * 0.17,
+                        height: width * 0.17,
                     }}
                 >
                     {categories.map((category, index) => (
@@ -145,11 +134,11 @@ const styles = StyleSheet.create({
     profilePicture: {
         borderRadius: 100,
         borderWidth: 2,
-        borderColor: colors.lightGray,
+        borderColor: colors.grayPrimary,
     },
     menuContainer: {
         borderWidth: 2,
-        borderColor: colors.lightGray,
+        borderColor: colors.grayPrimary,
         borderRadius: 100,
         padding: 15,
     },

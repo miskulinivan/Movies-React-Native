@@ -1,32 +1,41 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Pressable } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import useDimensions from '../hooks/useDimensions';
 
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-const { screenWidth } = useDimensions();
+const { width } = useDimensions();
 
 export default function MediaDisplay({ useCarousel, data, title }) {
     const carouselRef = useRef(null);
+    const navigation = useNavigation();
 
     const renderItem = ({ item }) => (
-        <View style={styles.carouselItem}>
-            <Image source={item.imageUri} style={styles.image} />
+        <Pressable>
+            <View style={styles.carouselItem}>
+                <Image source={item.imageUri} style={styles.image} />
 
-            <View style={styles.infoContainer}>
-                <View style={styles.carouselTextContainer}>
-                    <Text style={styles.titleText}>{item.title}</Text>
-                    <View style={styles.ratingContainer}>
-                        <AntDesign name='star' size={20} color='#f5c518' style={styles.starIcon} />
-                        <Text style={styles.ratingText}>4.5</Text>
+                <View style={styles.infoContainer}>
+                    <View style={styles.carouselTextContainer}>
+                        <Text style={styles.titleText}>{item.title}</Text>
+                        <View style={styles.ratingContainer}>
+                            <AntDesign
+                                name='star'
+                                size={20}
+                                color='#f5c518'
+                                style={styles.starIcon}
+                            />
+                            <Text style={styles.ratingText}>4.5</Text>
+                        </View>
+                    </View>
+                    <View style={styles.carouselInfo}>
+                        <AntDesign name='play' size={40} color='white' />
                     </View>
                 </View>
-                <View style={styles.carouselInfo}>
-                    <AntDesign name='play' size={40} color='white' />
-                </View>
             </View>
-        </View>
+        </Pressable>
     );
 
     if (useCarousel) {
@@ -35,17 +44,16 @@ export default function MediaDisplay({ useCarousel, data, title }) {
                 <View>
                     <Text style={styles.mediaHeader}>{title}</Text>
                 </View>
-                <View style={styles.carousel}>
-                    <Carousel
-                        loop
-                        autoplay
-                        ref={carouselRef}
-                        data={data}
-                        renderItem={renderItem}
-                        sliderWidth={screenWidth}
-                        itemWidth={screenWidth}
-                    />
-                </View>
+
+                <Carousel
+                    loop
+                    autoplay
+                    ref={carouselRef}
+                    data={data}
+                    renderItem={renderItem}
+                    sliderWidth={width}
+                    itemWidth={width}
+                />
             </View>
         );
     }
@@ -57,7 +65,11 @@ export default function MediaDisplay({ useCarousel, data, title }) {
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {data.map((item, index) => (
-                    <Pressable key={index} style={styles.pressable}>
+                    <Pressable
+                        key={index}
+                        style={styles.pressable}
+                        onPress={() => navigation.navigate('Media')}
+                    >
                         <Image source={item.imageUri} style={styles.pressableImage} />
                         <View style={styles.pressableInfoContainer}>
                             <View style={{ flex: 1 }}>
@@ -106,21 +118,12 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         marginBottom: 16,
     },
-    carousel: {
-        shadowColor: '#ffffff',
-        shadowOffset: {
-            width: 0,
-            height: 7,
-        },
-        shadowOpacity: 0.5,
-        shadowRadius: 14,
-        elevation: 14,
-    },
+
     carouselItem: {
         borderRadius: 15,
     },
     image: {
-        width: screenWidth * 0.9,
+        width: width * 0.9,
         height: 200,
         borderRadius: 50,
     },
@@ -159,8 +162,8 @@ const styles = StyleSheet.create({
         marginRight: 20,
     },
     pressableImage: {
-        width: screenWidth * 0.45,
-        height: screenWidth * 0.5,
+        width: width * 0.45,
+        height: width * 0.5,
         borderRadius: 20,
     },
     pressableInfoContainer: {

@@ -2,9 +2,10 @@ export const colors = {
     backgroundPrimary: '#050608',
 
     textPrimary: 'white',
-    lightGray: '#313236',
+    textSecondary: 'rgb(163 163 163)',
+    grayPrimary: '#313236',
+    graySecondary: '#444444',
     searchBackground: '#1f1f1f',
-    textSecondary: '#474747',
     btnPrimary: {
         background: [
             'rgb(189, 69, 65)',

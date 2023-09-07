@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import MediaScreen from '../screens/MediaScreen';
+import CastMemberScreen from '../screens/CastMemberScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,13 @@ export default function Navigation() {
                 <Stack.Screen
                     name='Media'
                     component={MediaScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name='CastMember'
+                    component={CastMemberScreen}
                     options={{
                         headerShown: false,
                     }}
