@@ -5,6 +5,7 @@ import HomeScreen from '../screens/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import MediaScreen from '../screens/MediaScreen';
 import CastMemberScreen from '../screens/CastMemberScreen';
+import SearchScreen from '../screens/SearchScreen';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,13 @@ export default function Navigation() {
                 <Stack.Screen
                     name='CastMember'
                     component={CastMemberScreen}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name='Search'
+                    component={SearchScreen}
                     options={{
                         headerShown: false,
                     }}

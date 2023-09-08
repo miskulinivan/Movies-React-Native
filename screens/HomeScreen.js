@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     ScrollView,
@@ -19,11 +19,14 @@ import GradientBackground from '../components/GradientBackground';
 import MediaDisplay from '../components/MediaDisplay';
 
 import { categories, allData } from '../data/data';
+import { useNavigation } from '@react-navigation/native';
+
 export default function HomeScreen() {
     const { width, height } = useDimensions();
     const [focusedIndex, setFocusedIndex] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [filteredData, setFilteredData] = useState([]);
+    const navigation = useNavigation();
 
     const setCategoryFocused = (index) => {
         setFocusedIndex(index);
@@ -39,6 +42,9 @@ export default function HomeScreen() {
         }
     };
 
+    useEffect(() => {
+        setFilteredData(allData);
+    }, []);
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style='light' />
@@ -65,6 +71,7 @@ export default function HomeScreen() {
                     placeholder='Search movie, series...'
                     style={styles.inputStyle}
                     placeholderTextColor={colors.textSecondary}
+                    onKeyPress={() => navigation.navigate('Search')}
                 />
 
                 <GradientBackground
