@@ -20,6 +20,7 @@ import MediaDisplay from '../components/MediaDisplay';
 
 import { categories, allData } from '../data/data';
 import { useNavigation } from '@react-navigation/native';
+import { fetchPopularMovies, fetchTrendingMovies, fetchUpcomingMovies } from '../api';
 
 export default function HomeScreen() {
     const { width, height } = useDimensions();
@@ -27,7 +28,11 @@ export default function HomeScreen() {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [filteredData, setFilteredData] = useState([]);
     const navigation = useNavigation();
+    const [upcoming, setUpcoming] = useState([]);
+    const [popular, setPopular] = useState([]);
+    const [trending, setTrending] = useState([]);
 
+    const [seriesData, setSeriesData] = useState();
     const setCategoryFocused = (index) => {
         setFocusedIndex(index);
     };
@@ -43,8 +48,27 @@ export default function HomeScreen() {
     };
 
     useEffect(() => {
-        setFilteredData(allData);
+        getPopularMovies();
+        getUpcomingMovies();
+        getTrendingMovies();
     }, []);
+
+    const getPopularMovies = async () => {
+        const data = await fetchPopularMovies();
+
+        setPopular(data);
+    };
+    const getUpcomingMovies = async () => {
+        const data = await fetchUpcomingMovies();
+
+        setUpcoming(data);
+    };
+    const getTrendingMovies = async () => {
+        const data = await fetchTrendingMovies();
+
+        setTrending(data);
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style='light' />
@@ -114,9 +138,9 @@ export default function HomeScreen() {
                 </ScrollView>
             </View>
             <ScrollView>
-                <MediaDisplay useCarousel data={filteredData} title='Trending' />
-                <MediaDisplay data={filteredData} title='Popular' />
-                <MediaDisplay data={filteredData} title='Upcoming' />
+                <MediaDisplay useCarousel data={trending} title='Trending' />
+                <MediaDisplay data={popular} title='Popular' />
+                <MediaDisplay data={upcoming} title='Upcoming' />
             </ScrollView>
         </SafeAreaView>
     );

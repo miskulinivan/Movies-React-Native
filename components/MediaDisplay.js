@@ -1,12 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Pressable } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import useDimensions from '../hooks/useDimensions';
 
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { fetchImage } from '../api';
 
-const { width } = useDimensions();
+const { width, height } = useDimensions();
 
 export default function MediaDisplay({ useCarousel, data, title }) {
     const carouselRef = useRef(null);
@@ -15,11 +16,23 @@ export default function MediaDisplay({ useCarousel, data, title }) {
     const renderItem = ({ item }) => (
         <Pressable>
             <View style={styles.carouselItem}>
-                <Image source={item.imageUri} style={styles.image} />
+                <Image
+                    source={{ uri: fetchImage(item?.backdrop_path) }}
+                    style={[
+                        styles.image,
+                        {
+                            width: width * 0.9,
+                            height: 200,
+                        },
+                    ]}
+                />
 
                 <View style={styles.infoContainer}>
                     <View style={styles.carouselTextContainer}>
-                        <Text style={styles.titleText}>{item.title}</Text>
+                        <Text style={styles.titleText}>
+                            {item.title?.length > 20 ? item.title.slice(0, 20) + '...' : item.title}
+                        </Text>
+
                         <View style={styles.ratingContainer}>
                             <AntDesign
                                 name='star'
@@ -27,11 +40,8 @@ export default function MediaDisplay({ useCarousel, data, title }) {
                                 color='#f5c518'
                                 style={styles.starIcon}
                             />
-                            <Text style={styles.ratingText}>4.5</Text>
+                            <Text style={styles.ratingText}> {item.vote_average}</Text>
                         </View>
-                    </View>
-                    <View style={styles.carouselInfo}>
-                        <AntDesign name='play' size={40} color='white' />
                     </View>
                 </View>
             </View>
@@ -70,7 +80,10 @@ export default function MediaDisplay({ useCarousel, data, title }) {
                         style={styles.pressable}
                         onPress={() => navigation.navigate('Media')}
                     >
-                        <Image source={item.imageUri} style={styles.pressableImage} />
+                        <Image
+                            source={{ uri: fetchImage(item.poster_path) }}
+                            style={styles.pressableImage}
+                        />
                         <View style={styles.pressableInfoContainer}>
                             <View style={{ flex: 1 }}>
                                 <View>
@@ -85,18 +98,12 @@ export default function MediaDisplay({ useCarousel, data, title }) {
                                                 color='#f5c518'
                                                 style={styles.starIcon}
                                             />
-                                            <Text style={styles.pressableRatingText}>4.5</Text>
-                                        </View>
-                                        <View>
                                             <Text style={styles.pressableRatingText}>
-                                                50M+Views
+                                                {item.vote_average}
                                             </Text>
                                         </View>
                                     </View>
                                 </View>
-                            </View>
-                            <View style={styles.pressablePlayIcon}>
-                                <AntDesign name='play' size={25} color='white' />
                             </View>
                         </View>
                     </Pressable>
@@ -123,18 +130,15 @@ const styles = StyleSheet.create({
         borderRadius: 15,
     },
     image: {
-        width: width * 0.9,
-        height: 200,
         borderRadius: 50,
     },
     infoContainer: {
         position: 'absolute',
-        bottom: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        bottom: 10,
     },
     carouselTextContainer: {
         left: 20,
+        overflow: 'hidden',
     },
     titleText: {
         fontSize: 30,
@@ -149,6 +153,7 @@ const styles = StyleSheet.create({
     },
     ratingText: {
         color: 'white',
+        fontWeight: 'bold',
     },
     carouselInfo: {
         position: 'absolute',
@@ -162,7 +167,7 @@ const styles = StyleSheet.create({
         marginRight: 20,
     },
     pressableImage: {
-        width: width * 0.45,
+        width: width * 0.4,
         height: width * 0.5,
         borderRadius: 20,
     },
