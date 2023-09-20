@@ -21,6 +21,7 @@ import MediaDisplay from '../components/MediaDisplay';
 import { categories, allData } from '../data/data';
 import { useNavigation } from '@react-navigation/native';
 import { fetchPopularMovies, fetchTrendingMovies, fetchUpcomingMovies } from '../api';
+import Loading from '../components/Loading';
 
 export default function HomeScreen() {
     const { width, height } = useDimensions();
@@ -31,6 +32,7 @@ export default function HomeScreen() {
     const [upcoming, setUpcoming] = useState([]);
     const [popular, setPopular] = useState([]);
     const [trending, setTrending] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [seriesData, setSeriesData] = useState();
     const setCategoryFocused = (index) => {
@@ -55,8 +57,10 @@ export default function HomeScreen() {
 
     const getPopularMovies = async () => {
         const data = await fetchPopularMovies();
-
-        setPopular(data);
+        if (data) {
+            setPopular(data);
+            setIsLoading(false);
+        }
     };
     const getUpcomingMovies = async () => {
         const data = await fetchUpcomingMovies();
@@ -137,11 +141,15 @@ export default function HomeScreen() {
                     ))}
                 </ScrollView>
             </View>
-            <ScrollView>
-                <MediaDisplay useCarousel data={trending} title='Trending' />
-                <MediaDisplay data={popular} title='Popular' />
-                <MediaDisplay data={upcoming} title='Upcoming' />
-            </ScrollView>
+            {isLoading ? (
+                <Loading />
+            ) : (
+                <ScrollView>
+                    <MediaDisplay useCarousel data={trending} title='Trending' />
+                    <MediaDisplay data={popular} title='Popular' />
+                    <MediaDisplay data={upcoming} title='Upcoming' />
+                </ScrollView>
+            )}
         </SafeAreaView>
     );
 }

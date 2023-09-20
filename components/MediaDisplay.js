@@ -14,7 +14,7 @@ export default function MediaDisplay({ useCarousel, data, title }) {
     const navigation = useNavigation();
 
     const renderItem = ({ item }) => (
-        <Pressable>
+        <Pressable key={item.id} onPress={() => navigation.navigate('Media', item)}>
             <View style={styles.carouselItem}>
                 <Image
                     source={{ uri: fetchImage(item?.backdrop_path) }}
@@ -40,7 +40,7 @@ export default function MediaDisplay({ useCarousel, data, title }) {
                                 color='#f5c518'
                                 style={styles.starIcon}
                             />
-                            <Text style={styles.ratingText}> {item.vote_average}</Text>
+                            <Text style={styles.ratingText}> {item.vote_average.toFixed(1)}</Text>
                         </View>
                     </View>
                 </View>
@@ -74,11 +74,11 @@ export default function MediaDisplay({ useCarousel, data, title }) {
                 <Text style={styles.mediaHeader}>{title}</Text>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {data.map((item, index) => (
+                {data?.map((item, index) => (
                     <Pressable
                         key={index}
                         style={styles.pressable}
-                        onPress={() => navigation.navigate('Media')}
+                        onPress={() => navigation.navigate('Media', item)}
                     >
                         <Image
                             source={{ uri: fetchImage(item.poster_path) }}

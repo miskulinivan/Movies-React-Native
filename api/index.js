@@ -6,15 +6,25 @@ const popularSeriesEndpoint = `${baseURL}/tv/popular`;
 const popularMoviesEndpoint = `${baseURL}/movie/popular?key=${apiKey}`;
 const upcomingMoviesEndpoint = `${baseURL}/movie/upcoming?key=${apiKey}`;
 const trendingMoviesEndpoint = `${baseURL}/trending/movie/day?key=${apiKey}`;
+const similarMoviesEndpoint = `${baseURL}/movie/movie/similar?key=${apiKey}`;
 
+/* const similarMoviesEndpoint = `${baseURL}/movie/${movieID}/similar?key=${apiKey}`; */
+
+/* const movieDetailsEndpoint = `${baseURL}/movie/${movieID}?key=${apiKey}`; */
 //images
 
 export const fetchImage = (path) => {
     return path ? `https://image.tmdb.org/t/p/w500${path}` : null;
 };
 
-//home screen
+const api = axios.create({
+    baseURL: 'https://api.themoviedb.org/3',
+    params: {
+        api_key: apiKey,
+    },
+});
 
+/* 
 export async function fetchPopularMovies(popularMoviesData) {
     try {
         const response = await axios.get(popularMoviesEndpoint, {
@@ -29,70 +39,57 @@ export async function fetchPopularMovies(popularMoviesData) {
     } catch (error) {
         console.error(error);
     }
-}
-
-export async function fetchUpcomingMovies(upcomingMoviesData) {
-    try {
-        const response = await axios.get(upcomingMoviesEndpoint, {
-            params: {
-                api_key: apiKey,
-            },
-        });
-
-        const upcomingMoviesData = response.data.results;
-
-        return upcomingMoviesData;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-export async function fetchTrendingMovies(trendingMoviesData) {
-    try {
-        const response = await axios.get(trendingMoviesEndpoint, {
-            params: {
-                api_key: apiKey,
-            },
-        });
-
-        const trendingMoviesData = response.data.results;
-
-        return trendingMoviesData;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-/* export async function fetchUpcomingMovies(updateDataCallback) {
-    try {
-        const response = await axios.get(upcomingMoviesEndpoint, {
-            params: {
-                api_key: apiKey,
-            },
-        });
-        // Assuming that the data you need is in response.data.results
-        const upcomingMoviesData = response.data.results;
-
-        // Call the callback function to update the state in your component
-        updateDataCallback(upcomingMoviesData);
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-export async function fetchTrendingMovies(updateDataCallback) {
-    try {
-        const response = await axios.get(trendingMoviesEndpoint, {
-            params: {
-                api_key: apiKey,
-            },
-        });
-        // Assuming that the data you need is in response.data.results
-        const trendingMoviesData = response.data.results;
-
-        // Call the callback function to update the state in your component
-        updateDataCallback(trendingMoviesData);
-    } catch (error) {
-        console.error(error);
-    }
 } */
+export async function fetchPopularMovies() {
+    try {
+        const response = await api.get('/movie/popular');
+        return response.data.results;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function fetchUpcomingMovies() {
+    try {
+        const response = await api.get('/movie/upcoming');
+        return response.data.results;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function fetchTrendingMovies() {
+    try {
+        const response = await api.get('/trending/movie/day');
+        return response.data.results;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function fetchMovieDetails(movieID) {
+    try {
+        const response = await api.get(`/movie/${movieID}`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function fetchMovieCredits(movieID) {
+    try {
+        const response = await api.get(`/movie/${movieID}/credits`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function fetchSimilarMovies(movieID) {
+    try {
+        const response = await api.get(`/movie/${movieID}/similar`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
